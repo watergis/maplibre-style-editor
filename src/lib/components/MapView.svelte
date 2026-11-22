@@ -8,6 +8,7 @@
 	} from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 	import '#lib/maplibre-worker.js';
+	import '#lib/maplibre-protocols.js';
 	import { MaplibreLegendControl } from '@watergis/maplibre-gl-legend';
 	import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';

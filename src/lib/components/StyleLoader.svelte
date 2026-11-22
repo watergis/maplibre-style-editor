@@ -89,10 +89,12 @@
 				class="absolute top-full right-0 left-0 z-50 mt-1 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
 				onmousedown={(e) => e.preventDefault()}
 			>
-				<li role="presentation" class="px-2 py-1 text-[11px] text-muted-foreground">
-					Sample styles
-				</li>
 				{#each STYLE_PRESETS as preset, i (preset.id)}
+					{#if preset.group !== STYLE_PRESETS[i - 1]?.group}
+						<li role="presentation" class="px-2 pt-2 pb-1 text-[11px] text-muted-foreground">
+							{preset.group}
+						</li>
+					{/if}
 					<li
 						id="{LIST_ID}-{i}"
 						role="option"
@@ -100,7 +102,7 @@
 						class="flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-xs hover:bg-accent aria-selected:bg-accent"
 						onmousedown={() => choose(preset)}
 					>
-						<span class="w-32 shrink-0 font-medium">{preset.name}</span>
+						<span class="w-44 shrink-0 font-medium">{preset.name}</span>
 						<span class="truncate text-muted-foreground">{preset.url}</span>
 						{#if preset.url === styleStore.url}
 							<CheckIcon class="ml-auto size-3.5 shrink-0" />
