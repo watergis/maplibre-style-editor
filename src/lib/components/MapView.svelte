@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import {
+		GeolocateControl,
 		Map as MaplibreMap,
 		NavigationControl,
 		ScaleControl,
@@ -58,7 +59,24 @@
 			hash: true,
 			attributionControl: { compact: true }
 		});
-		m.addControl(new NavigationControl(), 'bottom-right');
+		m.addControl(
+			new GeolocateControl({
+				positionOptions: {
+					enableHighAccuracy: true
+				},
+				trackUserLocation: false
+			}),
+			'bottom-right'
+		);
+		m.addControl(
+			new NavigationControl({
+				showZoom: true,
+				showCompass: true,
+				visualizePitch: true,
+				visualizeRoll: true
+			}),
+			'bottom-right'
+		);
 		m.addControl(new ScaleControl(), 'bottom-left');
 
 		// A new style (not a difference applied to the current one): the legend starts over with it.
