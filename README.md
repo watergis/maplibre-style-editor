@@ -2,7 +2,7 @@
 
 A web app to load a [MapLibre](https://maplibre.org/) style, edit it on the map or as JSON / YAML, and export it.
 
-- **Load** a style from a URL, a file (JSON, YAML, or a zip of split YAML files) dropped on the map or opened, or one of the CARTO sample styles (Voyager, Positron, Dark Matter).
+- **Load** a style from a URL, a file (JSON, YAML, or a zip of split YAML files) dropped on the map or opened, or one of the CARTO sample styles (Voyager, Positron, Dark Matter) listed under the URL box.
 - **Edit on the map** with the style editor of [maplibre-gl-legend](https://github.com/watergis/maplibre-gl-legend): the palette button of a layer in the legend opens it. Layers are grouped by their source layer.
 - **Edit as text** in the panel on the right of the map, which follows the map in real time:
   - **Split files**: `style.yml` (the root of the style) and one file per layer (`layers/<id>.yml`)
@@ -17,7 +17,7 @@ A web app to load a [MapLibre](https://maplibre.org/) style, edit it on the map 
 
 | How                       | What                                                                                  |
 | ------------------------- | ------------------------------------------------------------------------------------- |
-| Sample styles             | Choose a CARTO style from the list in the header.                                     |
+| Sample styles             | Click the URL box and choose a CARTO style from the list under it.                    |
 | URL                       | Enter the URL of a style (JSON or YAML) and press _Load_. The server must allow CORS. |
 | File                      | Open a file with the folder button, or drop it on the map.                            |
 | `?style=<url>` in the URL | Loads the style at `<url>` on start, e.g. `/?style=https://example.com/style.json`.   |

@@ -7,7 +7,6 @@
 	import * as DropdownMenu from '#lib/components/ui/dropdown-menu/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { Separator } from '#lib/components/ui/separator/index.js';
-	import PresetSelect from './PresetSelect.svelte';
 	import StyleLoader from './StyleLoader.svelte';
 	import { copyJson, downloadJson, downloadYaml, downloadZip } from '#lib/actions/export.js';
 	import { styleStore } from '#lib/state/style-store.svelte.js';
@@ -26,7 +25,6 @@
 		<h1 class="text-sm font-semibold">MapLibre Style Editor</h1>
 	</div>
 	<Separator orientation="vertical" class="h-6!" />
-	<PresetSelect />
 	<StyleLoader />
 	<DropdownMenu.Root>
 		<DropdownMenu.Trigger>
