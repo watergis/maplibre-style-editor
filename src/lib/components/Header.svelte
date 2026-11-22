@@ -1,5 +1,5 @@
 <script lang="ts">
-	import MapIcon from '@lucide/svelte/icons/map';
+	import logo from '#lib/assets/maplibre-logo.svg';
 	import DownloadIcon from '@lucide/svelte/icons/download';
 	import PanelRightCloseIcon from '@lucide/svelte/icons/panel-right-close';
 	import PanelRightOpenIcon from '@lucide/svelte/icons/panel-right-open';
@@ -20,7 +20,7 @@
 
 <header class="flex h-12 shrink-0 items-center gap-3 border-b px-3">
 	<div class="flex shrink-0 items-center gap-2">
-		<MapIcon class="size-5" />
+		<img src={logo} alt="" class="size-6" />
 		<h1 class="text-sm font-semibold">MapLibre Style Editor</h1>
 	</div>
 	<StyleLoader />
