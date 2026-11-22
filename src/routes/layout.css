@@ -147,6 +147,11 @@
 	--maplibregl-legend-tree-guide-color: var(--border);
 }
 
+/* The labels of the classes of a layer styled by data are drawn in an SVG with a fixed dark fill. */
+.maplibregl-legend-classes-symbols > svg > g[font-family] {
+	fill: var(--maplibregl-legend-text-color);
+}
+
 /* The controls of MapLibre on the map follow the dark theme (the map style itself does not). */
 .dark .maplibregl-ctrl-group,
 .dark .maplibregl-ctrl-attrib.maplibregl-compact,
