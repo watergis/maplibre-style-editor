@@ -7,6 +7,7 @@
 	import * as DropdownMenu from '#lib/components/ui/dropdown-menu/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import StyleLoader from './StyleLoader.svelte';
+	import ThemeToggle from './ThemeToggle.svelte';
 	import { copyJson, downloadJson, downloadYaml, downloadZip } from '#lib/actions/export.js';
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 
@@ -48,6 +49,7 @@
 			<DropdownMenu.Item onclick={copyJson}>Copy style JSON</DropdownMenu.Item>
 		</DropdownMenu.Content>
 	</DropdownMenu.Root>
+	<ThemeToggle />
 	<Tooltip.Root>
 		<Tooltip.Trigger>
 			{#snippet child({ props })}
