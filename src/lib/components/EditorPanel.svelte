@@ -8,8 +8,8 @@
 	import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
 	import CheckIcon from '@lucide/svelte/icons/check';
 	import CopyIcon from '@lucide/svelte/icons/copy';
-	import PanelBottomCloseIcon from '@lucide/svelte/icons/panel-bottom-close';
-	import PanelRightCloseIcon from '@lucide/svelte/icons/panel-right-close';
+	import XIcon from '@lucide/svelte/icons/x';
+	import PanelLeftOpenIcon from '@lucide/svelte/icons/panel-left-open';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as ToggleGroup from '#lib/components/ui/toggle-group/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
@@ -30,15 +30,12 @@
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 	import { confirmDiscard } from '#lib/state/confirm.svelte.js';
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
-	import type { PanelSide } from '#lib/map/open-panel-control.js';
 
 	interface Props {
-		/** Where the panel is, for the icon of the button that closes it. */
-		side?: PanelSide;
 		onclose: () => void;
 	}
 
-	let { side = 'right', onclose }: Props = $props();
+	let { onclose }: Props = $props();
 
 	type Scope = 'style' | 'files';
 
@@ -51,6 +48,8 @@
 	let format = $state<Format>('yaml');
 	let selected = $state<Target>({ kind: 'root' });
 	let autoApply = $state(false);
+	/** The file list is shown; hiding it gives the editor the whole width. */
+	let listOpen = $state(true);
 
 	const target = $derived<Target>(scope === 'style' ? { kind: 'style' } : selected);
 	const style = $derived(styleStore.style);
@@ -239,7 +238,7 @@
 						onclick={onclose}
 						aria-label="Hide the editor"
 					>
-						{#if side === 'bottom'}<PanelBottomCloseIcon />{:else}<PanelRightCloseIcon />{/if}
+						<XIcon />
 					</Button>
 				{/snippet}
 			</Tooltip.Trigger>
@@ -259,14 +258,39 @@
 	{/if}
 
 	<div class="flex min-h-0 flex-1">
-		{#if scope === 'files' && style}
+		{#if scope === 'files' && style && listOpen}
 			<div class="w-36 shrink-0 border-r sm:w-48">
-				<LayerFileList layers={style.layers} {selected} {format} onselect={selectTarget} />
+				<LayerFileList
+					layers={style.layers}
+					{selected}
+					{format}
+					onselect={selectTarget}
+					oncollapse={() => (listOpen = false)}
+				/>
 			</div>
 		{/if}
 		<div class="flex min-w-0 flex-1 flex-col">
 			<!-- The same height as the filter of the file list, so that the two rows line up. -->
 			<div class="flex h-11 shrink-0 items-center gap-2 border-b px-2">
+				{#if scope === 'files' && style && !listOpen}
+					<Tooltip.Root>
+						<Tooltip.Trigger>
+							{#snippet child({ props })}
+								<Button
+									{...props}
+									variant="ghost"
+									size="icon-sm"
+									class="shrink-0"
+									onclick={() => (listOpen = true)}
+									aria-label="Show the file list"
+								>
+									<PanelLeftOpenIcon />
+								</Button>
+							{/snippet}
+						</Tooltip.Trigger>
+						<Tooltip.Content>Show the file list</Tooltip.Content>
+					</Tooltip.Root>
+				{/if}
 				<!-- The label is cut short rather than pushing Apply out of a narrow panel. -->
 				<div class="flex min-w-0 items-center gap-1.5">
 					<Switch id="auto-apply" size="sm" bind:checked={autoApply} />

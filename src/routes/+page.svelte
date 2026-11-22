@@ -63,7 +63,7 @@
 		ondragleave={() => (dragging = false)}
 		{ondrop}
 	>
-		<MapView {panelOpen} panelSide={wide.current ? 'right' : 'bottom'} onopenpanel={openPanel} />
+		<MapView {panelOpen} onopenpanel={openPanel} />
 		{#if dragging}
 			<div
 				class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center border-4 border-dashed border-primary bg-background/60 p-4 text-center text-sm font-medium"
@@ -108,7 +108,7 @@
 					class="h-[80dvh] overflow-hidden data-[state=closed]:[transform:translate3d(0,100%,0)]"
 					aria-label="Style editor"
 				>
-					<EditorPanel side="bottom" onclose={closePanel} />
+					<EditorPanel onclose={closePanel} />
 				</Drawer.Content>
 			</Drawer.Root>
 		{/if}

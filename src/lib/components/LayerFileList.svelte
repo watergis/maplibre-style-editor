@@ -2,7 +2,10 @@
 	import type { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 	import FileCogIcon from '@lucide/svelte/icons/file-cog';
 	import SearchIcon from '@lucide/svelte/icons/search';
+	import PanelLeftCloseIcon from '@lucide/svelte/icons/panel-left-close';
+	import { Button } from '#lib/components/ui/button/index.js';
 	import { Input } from '#lib/components/ui/input/index.js';
+	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
 	import { ScrollArea } from '#lib/components/ui/scroll-area/index.js';
 	import { targetFileName, targetKey, type Format, type Target } from '#lib/editor/documents.js';
 	import { cn } from '#lib/utils.js';
@@ -12,9 +15,11 @@
 		selected: Target;
 		format: Format;
 		onselect: (target: Target) => void;
+		/** Hides the list; without it there is no button to hide it. */
+		oncollapse?: () => void;
 	}
 
-	let { layers, selected, format, onselect }: Props = $props();
+	let { layers, selected, format, onselect, oncollapse }: Props = $props();
 
 	let query = $state('');
 
@@ -40,11 +45,32 @@
 </script>
 
 <div class="flex h-full min-h-0 flex-col">
-	<div class="relative flex h-11 shrink-0 items-center border-b px-2">
-		<SearchIcon
-			class="pointer-events-none absolute top-1/2 left-4 size-3.5 -translate-y-1/2 text-muted-foreground"
-		/>
-		<Input bind:value={query} placeholder="Filter layers" class="h-7 pl-7 text-xs" />
+	<div class="flex h-11 shrink-0 items-center gap-1 border-b px-2">
+		{#if oncollapse}
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					{#snippet child({ props })}
+						<Button
+							{...props}
+							variant="ghost"
+							size="icon-sm"
+							class="shrink-0"
+							onclick={oncollapse}
+							aria-label="Hide the file list"
+						>
+							<PanelLeftCloseIcon />
+						</Button>
+					{/snippet}
+				</Tooltip.Trigger>
+				<Tooltip.Content>Hide the file list</Tooltip.Content>
+			</Tooltip.Root>
+		{/if}
+		<div class="relative min-w-0 flex-1">
+			<SearchIcon
+				class="pointer-events-none absolute top-1/2 left-2 size-3.5 -translate-y-1/2 text-muted-foreground"
+			/>
+			<Input bind:value={query} placeholder="Filter layers" class="h-7 pl-7 text-xs" />
+		</div>
 	</div>
 	<ScrollArea class="min-h-0 flex-1">
 		<ul class="p-1">

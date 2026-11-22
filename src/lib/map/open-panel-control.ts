@@ -1,17 +1,15 @@
 import type { IControl } from 'maplibre-gl';
 
-/** Where the editor panel opens from. */
-export type PanelSide = 'right' | 'bottom';
-
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
-/** The Lucide icons `panel-right-open` and `panel-bottom-open`. */
-const ICON_PATHS: Record<PanelSide, string[]> = {
-	right: ['M15 3v18', 'm10 15-3-3 3-3'],
-	bottom: ['M3 15h18', 'm9 10 3-3 3 3']
-};
+/** The Lucide icon `file-pen`. */
+const ICON_PATHS = [
+	'M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34',
+	'M14 2v5a1 1 0 0 0 1 1h5',
+	'M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z'
+];
 
-function icon(side: PanelSide): SVGSVGElement {
+function icon(): SVGSVGElement {
 	const svg = document.createElementNS(SVG_NS, 'svg');
 	const attrs = {
 		viewBox: '0 0 24 24',
@@ -27,12 +25,7 @@ function icon(side: PanelSide): SVGSVGElement {
 	for (const [k, v] of Object.entries(attrs)) svg.setAttribute(k, v);
 	svg.style.display = 'block';
 	svg.style.margin = 'auto';
-	const rect = document.createElementNS(SVG_NS, 'rect');
-	for (const [k, v] of Object.entries({ width: '18', height: '18', x: '3', y: '3', rx: '2' })) {
-		rect.setAttribute(k, v);
-	}
-	svg.appendChild(rect);
-	for (const d of ICON_PATHS[side]) {
+	for (const d of ICON_PATHS) {
 		const path = document.createElementNS(SVG_NS, 'path');
 		path.setAttribute('d', d);
 		svg.appendChild(path);
@@ -44,10 +37,7 @@ function icon(side: PanelSide): SVGSVGElement {
 export class OpenPanelControl implements IControl {
 	#container: HTMLDivElement | undefined;
 
-	constructor(
-		private readonly side: PanelSide,
-		private readonly onopen: () => void
-	) {}
+	constructor(private readonly onopen: () => void) {}
 
 	onAdd(): HTMLElement {
 		const container = document.createElement('div');
@@ -56,7 +46,7 @@ export class OpenPanelControl implements IControl {
 		button.type = 'button';
 		button.title = 'Show the editor';
 		button.setAttribute('aria-label', 'Show the editor');
-		button.appendChild(icon(this.side));
+		button.appendChild(icon());
 		button.addEventListener('click', () => this.onopen());
 		container.appendChild(button);
 		this.#container = container;
