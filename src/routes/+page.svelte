@@ -100,7 +100,7 @@
 			{@render mapArea()}
 			<!-- Dragged by its handle only, so that the code editor scrolls and selects text. The
 			     content stays mounted while closed, so that the edits are kept. -->
-			<Drawer.Root bind:open={drawerOpen} handleOnly shouldScaleBackground={false}>
+			<Drawer.Root bind:open={drawerOpen} modal={false} handleOnly shouldScaleBackground={false}>
 				<!-- Kept below the screen, out of reach, while closed (after the closing animation). -->
 				<Drawer.Content
 					forceMount
