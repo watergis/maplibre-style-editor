@@ -3,6 +3,7 @@
 	import type { Pane } from 'paneforge';
 	import * as Resizable from '#lib/components/ui/resizable/index.js';
 	import Header from '#lib/components/Header.svelte';
+	import Toolbar from '#lib/components/Toolbar.svelte';
 	import MapView from '#lib/components/MapView.svelte';
 	import EditorPanel from '#lib/components/EditorPanel.svelte';
 	import ConfirmDialog from '#lib/components/ConfirmDialog.svelte';
@@ -36,7 +37,8 @@
 </script>
 
 <div class="flex h-dvh flex-col">
-	<Header {panelOpen} ontogglepanel={togglePanel} />
+	<Header />
+	<Toolbar />
 	<main class="min-h-0 flex-1">
 		<Resizable.PaneGroup direction="horizontal" autoSaveId="maplibre-style-editor:panes">
 			<Resizable.Pane defaultSize={60} minSize={20}>
