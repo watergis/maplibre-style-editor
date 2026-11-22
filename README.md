@@ -1,54 +1,104 @@
-# sv
+# maplibre-style-editor
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A web app to load a [MapLibre](https://maplibre.org/) style, edit it on the map or as JSON / YAML, and export it.
 
-## Creating a project
+- **Load** a style from a URL, a file (JSON, YAML, or a zip of split YAML files) dropped on the map or opened, or one of the CARTO sample styles (Voyager, Positron, Dark Matter).
+- **Edit on the map** with the style editor of [maplibre-gl-legend](https://github.com/watergis/maplibre-gl-legend): the palette button of a layer in the legend opens it. Layers are grouped by their source layer.
+- **Edit as text** in the panel on the right of the map, which follows the map in real time:
+  - **Split files**: `style.yml` (the root of the style) and one file per layer (`layers/<id>.yml`)
+  - **Whole style**: the style as one file
+  - as **YAML** or **JSON**
+- **Export** the style as JSON (pretty or minified), as one YAML file, or as a zip of the split YAML files.
+- Show **tile boundaries**, **collision boxes** and **padding** on the map, and the current **zoom level**.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Usage
 
-```sh
-# create a new project
-npx sv create my-app
+### Loading a style
+
+| How                       | What                                                                                  |
+| ------------------------- | ------------------------------------------------------------------------------------- |
+| Sample styles             | Choose a CARTO style from the list in the header.                                     |
+| URL                       | Enter the URL of a style (JSON or YAML) and press _Load_. The server must allow CORS. |
+| File                      | Open a file with the folder button, or drop it on the map.                            |
+| `?style=<url>` in the URL | Loads the style at `<url>` on start, e.g. `/?style=https://example.com/style.json`.   |
+
+Files can be:
+
+- a style as JSON (`.json`)
+- a style as one YAML file (`.yml`, `.yaml`)
+- a zip of split YAML files (`.zip`): `style.yml` and `layers/*.yml`, at the root of the zip or in one folder
+
+### Editing as text
+
+The editor shows the selected document; edit it, then press **Apply** or <kbd>⌘S</kbd> / <kbd>Ctrl+S</kbd>. With **Auto apply** on, the edits are applied after a short pause in typing.
+
+- Syntax errors are shown at their position, and new errors against the [style specification](https://maplibre.org/maplibre-style-spec/) are listed at the bottom. The edits are not applied while there are errors.
+- Changes made on the map (e.g. with the style editor of the legend) replace the text at once. If the text has edits not applied yet, they are kept and a banner offers to load the latest style instead.
+- Loading another style or switching the document asks before discarding edits not applied yet.
+
+### Split YAML files
+
+The style is split into a root file and one file per layer, referred to with the `!!inc/file` tag:
+
+```yaml
+# style.yml
+version: 8
+name: Voyager
+sources:
+  protomaps:
+    type: vector
+    url: https://example.com/tiles.json
+layers:
+  - !!inc/file layers/background.yml
+  - !!inc/file layers/water.yml
 ```
 
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-pnpm dlx sv@1.7.0 create --template minimal --types ts --add prettier eslint vitest="usages:unit" tailwindcss="plugins:none" sveltekit-adapter="adapter:cloudflare+cfTarget:workers" --install pnpm app
+```yaml
+# layers/water.yml
+id: water
+type: fill
+source: protomaps
+source-layer: water
+paint:
+  fill-color: '#b0d0d6'
 ```
 
-## Adding features
+- Editing the list of `!!inc/file` in `style.yml` (as YAML) reorders or removes layers.
+- Variables can be defined at the root of `style.yml` and used anywhere in the style: a value `$name` is replaced by the value of `$name`. Variables are replaced when the files are loaded, so they are not kept in the style being edited.
 
-Add features to your project with `sv add`:
-
-```sh
-npx sv add
+```yaml
+$water: '#b0d0d6'
+version: 8
+# ...
 ```
 
-For example, to add Tailwind CSS:
+## Development
 
-```sh
-npx sv add tailwindcss
+Requires Node.js 22+ and pnpm.
+
+```bash
+pnpm install
+pnpm dev        # http://localhost:5173
+pnpm test       # unit tests
+pnpm check      # type check
+pnpm lint
+pnpm format
 ```
 
-## Developing
+Built with [SvelteKit](https://svelte.dev/docs/kit), [shadcn-svelte](https://shadcn-svelte.com/), [Tailwind CSS](https://tailwindcss.com/), [MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/) and [CodeMirror](https://codemirror.net/).
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Deploying to Cloudflare Workers
 
-```sh
-npm run dev
+The app is built with `@sveltejs/adapter-cloudflare` and deployed with [Wrangler](https://developers.cloudflare.com/workers/wrangler/) (configuration: [`wrangler.jsonc`](./wrangler.jsonc)).
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```bash
+pnpm build
+pnpm preview    # runs the built app on the Workers runtime locally
+pnpm deploy     # builds and deploys
 ```
 
-## Building
+`worker-configuration.d.ts` is generated by `wrangler types` (on install, build and check) and is not committed.
 
-To create a production version of your app:
+## License
 
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
+[MIT](./LICENSE)

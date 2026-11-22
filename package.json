@@ -18,7 +18,8 @@
 		"format": "prettier --write .",
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
-		"gen": "wrangler types"
+		"gen": "wrangler types",
+		"deploy": "pnpm build && wrangler deploy"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
