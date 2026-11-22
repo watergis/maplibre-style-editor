@@ -6,6 +6,7 @@
 	import PlayIcon from '@lucide/svelte/icons/play';
 	import RotateCcwIcon from '@lucide/svelte/icons/rotate-ccw';
 	import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
+	import CheckIcon from '@lucide/svelte/icons/check';
 	import CopyIcon from '@lucide/svelte/icons/copy';
 	import PanelBottomCloseIcon from '@lucide/svelte/icons/panel-bottom-close';
 	import PanelRightCloseIcon from '@lucide/svelte/icons/panel-right-close';
@@ -182,14 +183,26 @@
 		if (targetKey(t) !== targetKey(selected)) void switchTo(() => (selected = t));
 	}
 
+	/** How long the Copy button says "Copied". */
+	const COPIED_DELAY = 2000;
+	let copied = $state(false);
+	let copiedTimer: ReturnType<typeof setTimeout> | undefined;
+
 	async function copy() {
-		await navigator.clipboard.writeText(text);
-		toast.success(`Copied ${targetFileName(target, format)}`);
+		try {
+			await navigator.clipboard.writeText(text);
+		} catch (e) {
+			toast.error('The file cannot be copied', { description: String(e) });
+			return;
+		}
+		copied = true;
+		clearTimeout(copiedTimer);
+		copiedTimer = setTimeout(() => (copied = false), COPIED_DELAY);
 	}
 </script>
 
 <div class="flex h-full min-h-0 flex-col bg-background">
-	<div class="flex items-start gap-2 border-b p-2">
+	<div class="flex items-center gap-2 border-b p-2">
 		<div class="flex min-w-0 flex-1 flex-wrap items-center gap-2">
 			<ToggleGroup.Root
 				type="single"
@@ -215,52 +228,7 @@
 				<ToggleGroup.Item value="yaml" class="text-xs">YAML</ToggleGroup.Item>
 				<ToggleGroup.Item value="json" class="text-xs">JSON</ToggleGroup.Item>
 			</ToggleGroup.Root>
-
-			<div class="ml-auto flex items-center gap-2">
-				<div class="flex items-center gap-1.5">
-					<Switch id="auto-apply" size="sm" bind:checked={autoApply} />
-					<Label for="auto-apply" class="text-xs font-normal">Auto apply</Label>
-				</div>
-				<Tooltip.Root>
-					<Tooltip.Trigger>
-						{#snippet child({ props })}
-							<Button {...props} variant="ghost" size="icon-sm" onclick={copy} aria-label="Copy">
-								<CopyIcon />
-							</Button>
-						{/snippet}
-					</Tooltip.Trigger>
-					<Tooltip.Content>Copy this file</Tooltip.Content>
-				</Tooltip.Root>
-				<Tooltip.Root>
-					<Tooltip.Trigger>
-						{#snippet child({ props })}
-							<Button
-								{...props}
-								variant="ghost"
-								size="icon-sm"
-								disabled={!dirty}
-								onclick={discard}
-								aria-label="Discard the edits"
-							>
-								<RotateCcwIcon />
-							</Button>
-						{/snippet}
-					</Tooltip.Trigger>
-					<Tooltip.Content>Discard the edits</Tooltip.Content>
-				</Tooltip.Root>
-				<Tooltip.Root>
-					<Tooltip.Trigger>
-						{#snippet child({ props })}
-							<Button {...props} size="sm" disabled={!dirty} onclick={() => apply()}>
-								<PlayIcon /> Apply
-							</Button>
-						{/snippet}
-					</Tooltip.Trigger>
-					<Tooltip.Content>Apply to the map (⌘S / Ctrl+S)</Tooltip.Content>
-				</Tooltip.Root>
-			</div>
 		</div>
-		<!-- At the top right of the panel, whichever way the controls wrap. -->
 		<Tooltip.Root>
 			<Tooltip.Trigger>
 				{#snippet child({ props })}
@@ -297,15 +265,69 @@
 			</div>
 		{/if}
 		<div class="flex min-w-0 flex-1 flex-col">
-			<CodeEditor
-				value={text}
-				{format}
-				{diagnostics}
-				readonly={!style}
-				{onchange}
-				onsave={() => apply()}
-				class="flex-1"
-			/>
+			<!-- The same height as the filter of the file list, so that the two rows line up. -->
+			<div class="flex h-11 shrink-0 items-center gap-2 border-b px-2">
+				<!-- The label is cut short rather than pushing Apply out of a narrow panel. -->
+				<div class="flex min-w-0 items-center gap-1.5">
+					<Switch id="auto-apply" size="sm" bind:checked={autoApply} />
+					<Label for="auto-apply" class="min-w-0 truncate text-xs font-normal">Auto apply</Label>
+				</div>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<Button
+								{...props}
+								variant="ghost"
+								size="icon-sm"
+								disabled={!dirty}
+								onclick={discard}
+								aria-label="Discard the edits"
+							>
+								<RotateCcwIcon />
+							</Button>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>Discard the edits</Tooltip.Content>
+				</Tooltip.Root>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<Button
+								{...props}
+								size="sm"
+								class="ml-auto shrink-0"
+								disabled={!dirty}
+								onclick={() => apply()}
+							>
+								<PlayIcon /> Apply
+							</Button>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>Apply to the map (⌘S / Ctrl+S)</Tooltip.Content>
+				</Tooltip.Root>
+			</div>
+			<div class="relative flex min-h-0 flex-1 flex-col">
+				<CodeEditor
+					value={text}
+					{format}
+					{diagnostics}
+					readonly={!style}
+					{onchange}
+					onsave={() => apply()}
+					class="flex-1"
+				/>
+				<!-- Over the bottom right corner of the editor, clear of its vertical scrollbar. -->
+				<Button
+					variant="outline"
+					size="sm"
+					onclick={copy}
+					title="Copy this file"
+					class="absolute right-2 bottom-2 z-10 bg-background/80 backdrop-blur-sm"
+				>
+					{#if copied}<CheckIcon /> Copied{:else}<CopyIcon /> Copy{/if}
+				</Button>
+				<span class="sr-only" aria-live="polite">{copied ? 'Copied' : ''}</span>
+			</div>
 		</div>
 	</div>
 

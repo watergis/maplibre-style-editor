@@ -40,7 +40,7 @@
 </script>
 
 <div class="flex h-full min-h-0 flex-col">
-	<div class="relative border-b p-2">
+	<div class="relative flex h-11 shrink-0 items-center border-b px-2">
 		<SearchIcon
 			class="pointer-events-none absolute top-1/2 left-4 size-3.5 -translate-y-1/2 text-muted-foreground"
 		/>
