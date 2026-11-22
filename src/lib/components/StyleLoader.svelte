@@ -86,7 +86,7 @@
 				id={LIST_ID}
 				role="listbox"
 				aria-label="Sample styles"
-				class="absolute top-full right-0 left-0 z-50 mt-1 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+				class="absolute top-full right-0 left-0 z-50 mt-1 max-h-[60dvh] overflow-y-auto rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
 				onmousedown={(e) => e.preventDefault()}
 			>
 				{#each STYLE_PRESETS as preset, i (preset.id)}
@@ -102,8 +102,8 @@
 						class="flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-xs hover:bg-accent aria-selected:bg-accent"
 						onmousedown={() => choose(preset)}
 					>
-						<span class="w-44 shrink-0 font-medium">{preset.name}</span>
-						<span class="truncate text-muted-foreground">{preset.url}</span>
+						<span class="shrink-0 font-medium sm:w-44">{preset.name}</span>
+						<span class="hidden truncate text-muted-foreground sm:inline">{preset.url}</span>
 						{#if preset.url === styleStore.url}
 							<CheckIcon class="ml-auto size-3.5 shrink-0" />
 						{/if}

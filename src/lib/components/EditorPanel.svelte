@@ -198,10 +198,10 @@
 			onValueChange={selectScope}
 		>
 			<ToggleGroup.Item value="files" aria-label="Split files" class="text-xs">
-				<FilesIcon class="size-3.5" /> Split files
+				<FilesIcon class="size-3.5" /> <span class="hidden sm:inline">Split files</span>
 			</ToggleGroup.Item>
 			<ToggleGroup.Item value="style" aria-label="Whole style" class="text-xs">
-				<BracesIcon class="size-3.5" /> Whole style
+				<BracesIcon class="size-3.5" /> <span class="hidden sm:inline">Whole style</span>
 			</ToggleGroup.Item>
 		</ToggleGroup.Root>
 		<ToggleGroup.Root
@@ -289,7 +289,7 @@
 
 	<div class="flex min-h-0 flex-1">
 		{#if scope === 'files' && style}
-			<div class="w-48 shrink-0 border-r">
+			<div class="w-36 shrink-0 border-r sm:w-48">
 				<LayerFileList layers={style.layers} {selected} {format} onselect={selectTarget} />
 			</div>
 		{/if}
