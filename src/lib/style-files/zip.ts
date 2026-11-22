@@ -1,6 +1,6 @@
 import { strFromU8, strToU8, unzipSync, zipSync, type Zippable } from 'fflate';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { joinStyle, splitStyle, STYLE_FILE, type StyleFiles } from './index';
+import { joinStyle, splitStyle, STYLE_FILE, type StyleFiles } from './index.js';
 
 /** Zips a style split into `style.yml` and `layers/<id>.yml`. */
 export function exportStyleZip(style: StyleSpecification): Uint8Array<ArrayBuffer> {

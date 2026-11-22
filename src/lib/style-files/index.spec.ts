@@ -8,8 +8,8 @@ import {
 	resolveVariables,
 	toSingleYaml,
 	toRootYaml
-} from './index';
-import { exportStyleZip, importStyleZip, readStyleZip } from './zip';
+} from './index.js';
+import { exportStyleZip, importStyleZip, readStyleZip } from './zip.js';
 
 const style: StyleSpecification = {
 	version: 8,
