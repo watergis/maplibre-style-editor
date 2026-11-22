@@ -1,5 +1,6 @@
 <script lang="ts">
 	import './layout.css';
+	import { ModeWatcher } from 'mode-watcher';
 	import logo from '#lib/assets/maplibre-logo.svg';
 	import { Toaster } from '#lib/components/ui/sonner/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
@@ -13,6 +14,7 @@
 	<title>MapLibre Style Editor</title>
 </svelte:head>
 
+<ModeWatcher />
 <Tooltip.Provider>
 	{@render children()}
 </Tooltip.Provider>
