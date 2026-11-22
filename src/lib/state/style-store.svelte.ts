@@ -8,12 +8,6 @@ import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
  */
 export type ChangeOrigin = 'load' | 'editor' | 'map';
 
-export interface DebugOptions {
-	showTileBoundaries: boolean;
-	showCollisionBoxes: boolean;
-	showPadding: boolean;
-}
-
 /** The style being edited, shared by the map and the editor panel. */
 class StyleStore {
 	/** The current style. It is replaced, never mutated. */
@@ -28,13 +22,6 @@ class StyleStore {
 	loading = $state(false);
 	/** Whether the editor panel has edits not applied yet. */
 	dirty = $state(false);
-
-	debug = $state<DebugOptions>({
-		showTileBoundaries: false,
-		showCollisionBoxes: false,
-		showPadding: false
-	});
-	zoom = $state(0);
 
 	layerIds = $derived(this.style?.layers.map((l) => l.id) ?? []);
 

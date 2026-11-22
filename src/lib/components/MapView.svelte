@@ -5,6 +5,7 @@
 		GlobeControl,
 		Map as MaplibreMap,
 		NavigationControl,
+		Popup,
 		ScaleControl,
 		addProtocol,
 		setWorkerUrl,
@@ -15,11 +16,15 @@
 	import { Protocol } from 'pmtiles';
 	import { MaplibreLegendControl } from '@watergis/maplibre-gl-legend';
 	import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
+	import { MaplibreExportControl } from '@watergis/maplibre-gl-export';
+	import '@watergis/maplibre-gl-export/dist/maplibre-gl-export.css';
+	import MaplibreInspect from '@maplibre/maplibre-gl-inspect';
+	import '@maplibre/maplibre-gl-inspect/dist/maplibre-gl-inspect.css';
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 	import { styleStore } from '#lib/state/style-store.svelte.js';
-	import MapDebugControls from './MapDebugControls.svelte';
-	import ZoomIndicator from './ZoomIndicator.svelte';
 	import { OpenPanelControl } from '#lib/map/open-panel-control.js';
+	import { ZoomLevelControl } from '#lib/map/zoom-level-control.js';
+	import { DebugControl } from '#lib/map/debug-control.js';
 
 	interface Props {
 		/** The editor panel is open: the button that opens it is hidden. */
@@ -41,9 +46,30 @@
 	let container: HTMLDivElement;
 	let map = $state.raw<MaplibreMap>();
 	let legend: MaplibreLegendControl | undefined;
+	let inspect: MaplibreInspect | undefined;
+	/** The map shows the inspect style of maplibre-gl-inspect, not the style of the store. */
+	let inspecting = false;
 	/** The revision of the store the map shows. */
 	let shownRevision = -1;
 	let syncTimer: ReturnType<typeof setTimeout> | undefined;
+
+	/**
+	 * Adds to the sources of the inspector the source layers used by the style. maplibre-gl-inspect
+	 * finds them only for vector sources with a TileJSON `url`, not with inline `tiles`.
+	 */
+	const addInspectSources = (style: StyleSpecification | null | undefined) => {
+		if (!inspect || !style) return;
+		const sources = inspect.sources;
+		for (const [id, source] of Object.entries(style.sources)) {
+			if (source.type === 'geojson') sources[id] ??= [];
+		}
+		for (const layer of style.layers) {
+			if (!('source' in layer) || !('source-layer' in layer) || !layer['source-layer']) continue;
+			if (style.sources[layer.source]?.type !== 'vector') continue;
+			const layers = (sources[layer.source] ??= []);
+			if (!layers.includes(layer['source-layer'])) layers.push(layer['source-layer']);
+		}
+	};
 
 	const addLegend = (m: MaplibreMap) => {
 		if (legend) m.removeControl(legend);
@@ -78,7 +104,23 @@
 			'bottom-right'
 		);
 		m.addControl(new GlobeControl(), 'bottom-right');
+		m.addControl(new MaplibreExportControl({}), 'bottom-right');
+		// Bottom-left, from the bottom up: scale, zoom level, debug options, inspector.
 		m.addControl(new ScaleControl(), 'bottom-left');
+		m.addControl(new ZoomLevelControl(), 'bottom-left');
+		m.addControl(new DebugControl(), 'bottom-left');
+		inspect = new MaplibreInspect({
+			showInspectButton: true,
+			showMapPopup: false,
+			showInspectMapPopupOnHover: true,
+			popup: new Popup({ closeButton: false, closeOnClick: false }),
+			toggleCallback: (show) => {
+				inspecting = show;
+				// Called before the inspect style is made.
+				if (show) addInspectSources(styleStore.style);
+			}
+		});
+		m.addControl(inspect, 'bottom-left');
 
 		// A new style (not a difference applied to the current one): the legend starts over with it.
 		m.on('style.load', () => addLegend(m));
@@ -87,17 +129,14 @@
 		m.on('styledata', () => {
 			clearTimeout(syncTimer);
 			syncTimer = setTimeout(() => {
-				if (!styleStore.style) return;
+				// The inspect style is only shown, never edited.
+				if (!styleStore.style || inspecting) return;
 				const style = m.getStyle() as StyleSpecification | undefined;
 				if (!style) return;
 				styleStore.updateFromMap(style);
 				shownRevision = styleStore.revision;
 			}, SYNC_DELAY);
 		});
-
-		const updateZoom = () => (styleStore.zoom = m.getZoom());
-		m.on('zoom', updateZoom);
-		updateZoom();
 
 		// The map follows the size of its pane, not only of the window.
 		const observer = new ResizeObserver(() => m.resize());
@@ -111,6 +150,8 @@
 			observer.disconnect();
 			m.remove();
 			map = undefined;
+			inspect = undefined;
+			inspecting = false;
 		};
 	});
 
@@ -123,6 +164,17 @@
 		// A pending read of the map would overwrite the store with the style being replaced.
 		clearTimeout(syncTimer);
 		// The map keeps the object it is given: pass a copy so that the store is never mutated.
+		if (inspecting) {
+			// The inspector keeps the new style to restore it, and colors its layers once loaded.
+			const m = map;
+			m.setStyle(structuredClone<MapStyle>(style), { diff: false });
+			m.once('style.load', () => {
+				if (!inspecting) return;
+				addInspectSources(style);
+				inspect?.render();
+			});
+			return;
+		}
 		map.setStyle(structuredClone<MapStyle>(style), { diff: origin === 'editor' });
 	});
 
@@ -135,19 +187,6 @@
 		control.moveToTop();
 		return () => m.removeControl(control);
 	});
-
-	$effect(() => {
-		if (!map) return;
-		map.showTileBoundaries = styleStore.debug.showTileBoundaries;
-		map.showCollisionBoxes = styleStore.debug.showCollisionBoxes;
-		map.showPadding = styleStore.debug.showPadding;
-	});
 </script>
 
-<div class="relative h-full w-full">
-	<div bind:this={container} class="h-full w-full"></div>
-	<div class="pointer-events-none absolute bottom-10 left-2.5 z-10 flex flex-col items-start gap-2">
-		<div class="pointer-events-auto"><MapDebugControls /></div>
-		<div class="pointer-events-auto"><ZoomIndicator /></div>
-	</div>
-</div>
+<div bind:this={container} class="h-full w-full"></div>

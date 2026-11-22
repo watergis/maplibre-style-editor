@@ -1,6 +1,7 @@
 allowBuilds:
   workerd: true
   esbuild: true
+  core-js: false
 engineStrict: true
 minimumReleaseAgeExclude:
   - '@watergis/maplibre-gl-legend@4.2.0'
