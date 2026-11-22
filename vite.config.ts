@@ -15,6 +15,8 @@ export default defineConfig({
 			adapter: adapter()
 		})
 	],
+	// MapLibre GL JS runs its worker as an ES module.
+	worker: { format: 'es' },
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
