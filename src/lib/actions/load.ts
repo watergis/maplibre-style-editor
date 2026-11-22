@@ -1,5 +1,5 @@
 import { toast } from 'svelte-sonner';
-import { replaceState } from '$app/navigation';
+import { goto } from '$app/navigation';
 import {
 	loadStyleFromFile,
 	loadStyleFromUrl,
@@ -7,6 +7,7 @@ import {
 	type LoadedStyle
 } from '#lib/load-style.js';
 import { styleStore } from '#lib/state/style-store.svelte.js';
+import { confirmDiscard } from '#lib/state/confirm.svelte.js';
 
 /** The query parameter of the URL of the style, e.g. `?style=https://.../style.json`. */
 export const STYLE_PARAM = 'style';
@@ -17,10 +18,11 @@ const setStyleParam = (url: string | null) => {
 	else pageUrl.searchParams.delete(STYLE_PARAM);
 	// Only the query of the current page changes: there is no route to resolve.
 	// eslint-disable-next-line svelte/no-navigation-without-resolve
-	void replaceState(pageUrl, {});
+	void goto(pageUrl, { replace: true, shallow: true });
 };
 
 async function load(read: () => Promise<LoadedStyle>, url: string | null) {
+	if (!(await confirmDiscard(styleStore.dirty))) return false;
 	styleStore.loading = true;
 	try {
 		const { style, name } = await read();

@@ -65,6 +65,8 @@
 		observer.observe(container);
 
 		map = m;
+		// For debugging in the browser console.
+		if (import.meta.env.DEV) Object.assign(window, { map: m });
 		return () => {
 			clearTimeout(syncTimer);
 			observer.disconnect();

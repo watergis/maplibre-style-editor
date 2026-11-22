@@ -127,3 +127,15 @@
 		@apply font-sans;
 	}
 }
+
+/* The legend and its style editor follow the theme of the app. */
+.maplibregl-legend-list {
+	--maplibregl-legend-switch-on-color: var(--primary);
+	--maplibregl-legend-focus-color: var(--ring);
+	--maplibregl-legend-text-color: var(--foreground);
+}
+
+.gl-style-editor-dialog {
+	--gl-style-editor-primary: var(--primary);
+	--gl-style-editor-radius: var(--radius);
+}

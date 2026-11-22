@@ -1,4 +1,4 @@
-import type { LayerSpecification, StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
+import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 
 /**
  * Where a change of the style came from:
@@ -59,22 +59,6 @@ class StyleStore {
 	/** Replaces the whole style with an edited one. */
 	apply(style: StyleSpecification) {
 		this.set(style, 'editor');
-	}
-
-	/** Replaces the layer `id` with an edited one, whose id may be different. */
-	applyLayer(id: string, layer: LayerSpecification) {
-		if (!this.style) return;
-		if (layer.id !== id && this.layerIds.includes(layer.id)) {
-			throw new Error(`A layer "${layer.id}" already exists`);
-		}
-		const layers = this.style.layers.map((l) => (l.id === id ? layer : l));
-		this.apply({ ...this.style, layers });
-	}
-
-	/** Replaces everything but the layers. */
-	applyRoot(root: Omit<StyleSpecification, 'layers'>) {
-		if (!this.style) return;
-		this.apply({ ...root, layers: this.style.layers });
 	}
 }
 
