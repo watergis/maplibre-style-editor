@@ -14,7 +14,10 @@
 	import { indentWithTab } from '@codemirror/commands';
 	import { json } from '@codemirror/lang-json';
 	import { yaml } from '@codemirror/lang-yaml';
+	import { syntaxHighlighting } from '@codemirror/language';
 	import { lintGutter, setDiagnostics } from '@codemirror/lint';
+	import { oneDarkHighlightStyle } from '@codemirror/theme-one-dark';
+	import { mode } from 'mode-watcher';
 	import type { Format } from '#lib/editor/documents.js';
 
 	interface Props {
@@ -42,6 +45,10 @@
 
 	const language = new Compartment();
 	const editable = new Compartment();
+	const colorScheme = new Compartment();
+	/** The dark one turns on the dark variants of CodeMirror and a highlight style for dark backgrounds. */
+	const colorSchemeOf = (dark: boolean) =>
+		dark ? [EditorView.theme({}, { dark: true }), syntaxHighlighting(oneDarkHighlightStyle)] : [];
 	const languageOf = (f: Format) => (f === 'json' ? json() : yaml());
 
 	let parent: HTMLDivElement;
@@ -55,6 +62,10 @@
 			color: 'var(--muted-foreground)',
 			borderRight: '1px solid var(--border)'
 		},
+		'.cm-activeLine': {
+			backgroundColor: 'color-mix(in oklab, var(--foreground) 5%, transparent)'
+		},
+		'.cm-activeLineGutter': { backgroundColor: 'var(--accent)', color: 'var(--foreground)' },
 		'&.cm-focused': { outline: 'none' }
 	});
 
@@ -80,6 +91,7 @@
 					language.of(languageOf(format)),
 					editable.of(EditorState.readOnly.of(readonly)),
 					theme,
+					colorScheme.of(colorSchemeOf(mode.current === 'dark')),
 					EditorView.updateListener.of((update) => {
 						if (!update.docChanged) return;
 						if (update.transactions.some((tr) => tr.annotation(External))) return;
@@ -113,6 +125,11 @@
 
 	$effect(() => {
 		view?.dispatch({ effects: language.reconfigure(languageOf(format)) });
+	});
+
+	$effect(() => {
+		const dark = mode.current === 'dark';
+		view?.dispatch({ effects: colorScheme.reconfigure(colorSchemeOf(dark)) });
 	});
 
 	$effect(() => {
