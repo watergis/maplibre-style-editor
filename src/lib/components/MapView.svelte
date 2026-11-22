@@ -71,6 +71,17 @@
 		}
 	};
 
+	/** Moves the map to the initial position of the style, for the properties the style sets. */
+	const jumpToStyle = (m: MaplibreMap, style: StyleSpecification) => {
+		const { center, zoom, bearing, pitch } = style;
+		m.jumpTo({
+			...(center && { center }),
+			...(zoom !== undefined && { zoom }),
+			...(bearing !== undefined && { bearing }),
+			...(pitch !== undefined && { pitch })
+		});
+	};
+
 	const addLegend = (m: MaplibreMap) => {
 		if (legend) m.removeControl(legend);
 		legend = new MaplibreLegendControl({}, { groupBySourceLayer: true, showStyleEditor: true });
@@ -168,6 +179,7 @@
 			// The inspector keeps the new style to restore it, and colors its layers once loaded.
 			const m = map;
 			m.setStyle(structuredClone<MapStyle>(style), { diff: false });
+			if (origin === 'load' && styleStore.resetView) jumpToStyle(m, style);
 			m.once('style.load', () => {
 				if (!inspecting) return;
 				addInspectSources(style);
@@ -176,6 +188,7 @@
 			return;
 		}
 		map.setStyle(structuredClone<MapStyle>(style), { diff: origin === 'editor' });
+		if (origin === 'load' && styleStore.resetView) jumpToStyle(map, style);
 	});
 
 	// The button that opens the editor panel, shown while the panel is closed, above the zoom buttons.

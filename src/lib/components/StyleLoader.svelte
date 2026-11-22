@@ -28,7 +28,7 @@
 	function choose(preset: StylePreset) {
 		open = false;
 		url = preset.url;
-		void loadUrl(preset.url);
+		void loadUrl(preset.url, { resetView: true });
 	}
 
 	function onkeydown(e: KeyboardEvent) {
@@ -50,7 +50,8 @@
 		e.preventDefault();
 		open = false;
 		const value = url.trim();
-		if (value) void loadUrl(value);
+		// A style chosen here is shown at its own initial position, not at the current one.
+		if (value) void loadUrl(value, { resetView: true });
 	}
 
 	function onFile(e: Event) {

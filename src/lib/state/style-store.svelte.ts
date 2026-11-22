@@ -22,6 +22,11 @@ class StyleStore {
 	loading = $state(false);
 	/** Whether the editor panel has edits not applied yet. */
 	dirty = $state(false);
+	/**
+	 * The map moves to the initial position of the loaded style (`center`, `zoom`, `bearing`,
+	 * `pitch`) instead of keeping its current position.
+	 */
+	resetView = $state(false);
 
 	layerIds = $derived(this.style?.layers.map((l) => l.id) ?? []);
 
@@ -31,10 +36,16 @@ class StyleStore {
 		this.revision++;
 	}
 
-	load(style: StyleSpecification, name: string, url: string | null = null) {
+	load(
+		style: StyleSpecification,
+		name: string,
+		url: string | null = null,
+		{ resetView = false }: { resetView?: boolean } = {}
+	) {
 		this.name = name;
 		this.url = url;
 		this.dirty = false;
+		this.resetView = resetView;
 		this.set(style, 'load');
 	}
 

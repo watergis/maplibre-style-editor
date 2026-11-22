@@ -21,7 +21,16 @@ const setStyleParam = (url: string | null) => {
 	void goto(pageUrl, { replace: true, shallow: true });
 };
 
-async function load(read: () => Promise<LoadedStyle>, url: string | null) {
+interface LoadOptions {
+	/** The map moves to the initial position of the style instead of keeping its position. */
+	resetView?: boolean;
+}
+
+async function load(
+	read: () => Promise<LoadedStyle>,
+	url: string | null,
+	options: LoadOptions = {}
+) {
 	if (!(await confirmDiscard(styleStore.dirty))) return false;
 	styleStore.loading = true;
 	try {
@@ -32,7 +41,7 @@ async function load(read: () => Promise<LoadedStyle>, url: string | null) {
 				description: errors.slice(0, 5).join('\n')
 			});
 		}
-		styleStore.load(style, name, url);
+		styleStore.load(style, name, url, options);
 		setStyleParam(url);
 		return true;
 	} catch (e) {
@@ -45,6 +54,7 @@ async function load(read: () => Promise<LoadedStyle>, url: string | null) {
 	}
 }
 
-export const loadUrl = (url: string) => load(() => loadStyleFromUrl(url), url);
+export const loadUrl = (url: string, options?: LoadOptions) =>
+	load(() => loadStyleFromUrl(url), url, options);
 
 export const loadFile = (file: File) => load(() => loadStyleFromFile(file), null);
