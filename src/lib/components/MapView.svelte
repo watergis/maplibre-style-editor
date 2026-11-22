@@ -17,6 +17,17 @@
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 	import MapDebugControls from './MapDebugControls.svelte';
 	import ZoomIndicator from './ZoomIndicator.svelte';
+	import { OpenPanelControl, type PanelSide } from '#lib/map/open-panel-control.js';
+
+	interface Props {
+		/** The editor panel is open: the button that opens it is hidden. */
+		panelOpen: boolean;
+		/** Where the editor panel opens from, for the icon of the button. */
+		panelSide?: PanelSide;
+		onopenpanel: () => void;
+	}
+
+	let { panelOpen, panelSide = 'right', onopenpanel }: Props = $props();
 
 	// MapLibre GL JS finds its worker next to its own module, which is not where Vite serves it once
 	// bundled: point MapLibre to the worker bundled by Vite.
@@ -94,6 +105,16 @@
 		clearTimeout(syncTimer);
 		// The map keeps the object it is given: pass a copy so that the store is never mutated.
 		map.setStyle(structuredClone<MapStyle>(style), { diff: origin === 'editor' });
+	});
+
+	// The button that opens the editor panel, shown while the panel is closed, above the zoom buttons.
+	$effect(() => {
+		if (!map || panelOpen) return;
+		const m = map;
+		const control = new OpenPanelControl(panelSide, () => onopenpanel());
+		m.addControl(control, 'top-right');
+		control.moveToTop();
+		return () => m.removeControl(control);
 	});
 
 	$effect(() => {

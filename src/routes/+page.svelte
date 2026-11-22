@@ -19,11 +19,8 @@
 		void loadUrl(url || DEFAULT_PRESET.url);
 	});
 
-	const togglePanel = () => {
-		if (!editorPane) return;
-		if (editorPane.isCollapsed()) editorPane.expand();
-		else editorPane.collapse();
-	};
+	const openPanel = () => editorPane?.expand();
+	const closePanel = () => editorPane?.collapse();
 
 	const hasFiles = (e: DragEvent) => e.dataTransfer?.types.includes('Files') ?? false;
 
@@ -54,7 +51,7 @@
 					ondragleave={() => (dragging = false)}
 					{ondrop}
 				>
-					<MapView />
+					<MapView {panelOpen} onopenpanel={openPanel} />
 					{#if dragging}
 						<div
 							class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center border-4 border-dashed border-primary bg-background/60 text-sm font-medium"
@@ -74,7 +71,7 @@
 				onCollapse={() => (panelOpen = false)}
 				onExpand={() => (panelOpen = true)}
 			>
-				<EditorPanel />
+				<EditorPanel onclose={closePanel} />
 			</Resizable.Pane>
 		</Resizable.PaneGroup>
 	</main>

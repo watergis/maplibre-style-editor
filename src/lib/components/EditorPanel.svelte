@@ -7,6 +7,8 @@
 	import RotateCcwIcon from '@lucide/svelte/icons/rotate-ccw';
 	import RefreshCwIcon from '@lucide/svelte/icons/refresh-cw';
 	import CopyIcon from '@lucide/svelte/icons/copy';
+	import PanelBottomCloseIcon from '@lucide/svelte/icons/panel-bottom-close';
+	import PanelRightCloseIcon from '@lucide/svelte/icons/panel-right-close';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as ToggleGroup from '#lib/components/ui/toggle-group/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
@@ -27,6 +29,15 @@
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 	import { confirmDiscard } from '#lib/state/confirm.svelte.js';
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
+	import type { PanelSide } from '#lib/map/open-panel-control.js';
+
+	interface Props {
+		/** Where the panel is, for the icon of the button that closes it. */
+		side?: PanelSide;
+		onclose: () => void;
+	}
+
+	let { side = 'right', onclose }: Props = $props();
 
 	type Scope = 'style' | 'files';
 
@@ -245,6 +256,22 @@
 					{/snippet}
 				</Tooltip.Trigger>
 				<Tooltip.Content>Apply to the map (⌘S / Ctrl+S)</Tooltip.Content>
+			</Tooltip.Root>
+			<Tooltip.Root>
+				<Tooltip.Trigger>
+					{#snippet child({ props })}
+						<Button
+							{...props}
+							variant="ghost"
+							size="icon-sm"
+							onclick={onclose}
+							aria-label="Hide the editor"
+						>
+							{#if side === 'bottom'}<PanelBottomCloseIcon />{:else}<PanelRightCloseIcon />{/if}
+						</Button>
+					{/snippet}
+				</Tooltip.Trigger>
+				<Tooltip.Content>Hide the editor</Tooltip.Content>
 			</Tooltip.Root>
 		</div>
 	</div>
