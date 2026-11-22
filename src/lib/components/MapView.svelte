@@ -4,17 +4,25 @@
 		Map as MaplibreMap,
 		NavigationControl,
 		ScaleControl,
+		addProtocol,
+		setWorkerUrl,
 		type StyleSpecification as MapStyle
 	} from 'maplibre-gl';
 	import 'maplibre-gl/dist/maplibre-gl.css';
-	import '#lib/maplibre-worker.js';
-	import '#lib/maplibre-protocols.js';
+	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
+	import { Protocol } from 'pmtiles';
 	import { MaplibreLegendControl } from '@watergis/maplibre-gl-legend';
 	import '@watergis/maplibre-gl-legend/dist/maplibre-gl-legend.css';
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 	import MapDebugControls from './MapDebugControls.svelte';
 	import ZoomIndicator from './ZoomIndicator.svelte';
+
+	// MapLibre GL JS finds its worker next to its own module, which is not where Vite serves it once
+	// bundled: point MapLibre to the worker bundled by Vite.
+	setWorkerUrl(workerUrl);
+	// Sources with `pmtiles://` URLs.
+	addProtocol('pmtiles', new Protocol().tile);
 
 	/** How long to wait for more style changes before reading the style of the map. */
 	const SYNC_DELAY = 150;
