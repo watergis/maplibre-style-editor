@@ -2,7 +2,7 @@
 	import logo from '#lib/assets/maplibre-logo.svg';
 	import { Button } from '#lib/components/ui/button/index.js';
 	import * as Tooltip from '#lib/components/ui/tooltip/index.js';
-	import GitHubIcon from './GitHubIcon.svelte';
+	import { siGithub } from 'simple-icons';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	const REPOSITORY_URL = 'https://github.com/watergis/maplibre-style-editor';
@@ -27,7 +27,9 @@
 						variant="ghost"
 						aria-label="GitHub repository"
 					>
-						<GitHubIcon class="size-4" />
+						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path d={siGithub.path} />
+						</svg>
 					</Button>
 				{/snippet}
 			</Tooltip.Trigger>

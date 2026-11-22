@@ -123,6 +123,9 @@ importers:
       shadcn-svelte:
         specifier: ^1.8.1
         version: 1.8.1(svelte@5.59.1(@typescript-eslint/types@8.73.0))
+      simple-icons:
+        specifier: ^16.38.0
+        version: 16.38.0
       svelte:
         specifier: ^5.57.3
         version: 5.59.1(@typescript-eslint/types@8.73.0)
@@ -2046,6 +2049,10 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  simple-icons@16.38.0:
+    resolution: {integrity: sha512-B0Wws90eL0Fm65aH35CA8kM+7/Zzgsaytt0DndBx7VFm3+o9HurVIVRQZ1hvqqYYIyNJq7ycn3kQm2v2FhiWSQ==}
+    engines: {node: '>=0.12.18'}
 
   sirv@3.0.2:
     resolution: {integrity: sha512-2wcC/oGxHis/BoHkkPwldgiPSYcpZK3JU28WoMVv55yHJgcZ8rlXvuG9iZggz+sU1d4bRgIGASwyWqjxu3FM0g==}
@@ -4115,6 +4122,8 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
+
+  simple-icons@16.38.0: {}
 
   sirv@3.0.2:
     dependencies:
