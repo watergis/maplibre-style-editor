@@ -36,8 +36,8 @@ importers:
         specifier: ^26.9.0
         version: 26.9.0
       '@watergis/maplibre-gl-legend':
-        specifier: ^4.1.0
-        version: 4.1.0(maplibre-gl@6.19.0)
+        specifier: ^4.2.0
+        version: 4.2.0(maplibre-gl@6.19.0)
       codemirror:
         specifier: ^6.0.2
         version: 6.0.2
@@ -1150,8 +1150,8 @@ packages:
   '@vitest/spy@5.1.1':
     resolution: {integrity: sha512-6K8C6alQG1/Yc8/ZI22iJS7JEsxPdVzqtqDq+/xM4Z0mGVykemMVjLhqMy/q6/IHYG3kKD8hKSwRen/ZdyI9vQ==}
 
-  '@watergis/maplibre-gl-legend@4.1.0':
-    resolution: {integrity: sha512-S++YwOrAyzPXYvaMxT5yoo74+W5ojw9X5lFFpsYhuzZ+4YpALmJDoJ1yFWHw/9MjeuYFTlmV1Imns9xrHg3aig==}
+  '@watergis/maplibre-gl-legend@4.2.0':
+    resolution: {integrity: sha512-ZfkMPQqwGhsl0W/ZhjOjI3frDsbBGhBlt4L4QfYi/I4q1uDADF6RKxbvf4KAw+HeAwkaMQy/wRWlyKUd8Yi8yQ==}
     peerDependencies:
       maplibre-gl: ^6.4.1
 
@@ -3254,7 +3254,7 @@ snapshots:
 
   '@vitest/spy@5.1.1': {}
 
-  '@watergis/maplibre-gl-legend@4.1.0(maplibre-gl@6.19.0)':
+  '@watergis/maplibre-gl-legend@4.2.0(maplibre-gl@6.19.0)':
     dependencies:
       maplibre-gl: 6.19.0
 
