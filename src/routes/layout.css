@@ -131,10 +131,68 @@
 }
 
 /* The legend and its style editor follow the theme of the app. */
-.maplibregl-legend-list {
+.maplibregl-ctrl .maplibregl-legend-list {
 	--maplibregl-legend-switch-on-color: var(--primary);
+	--maplibregl-legend-switch-off-color: var(--muted-foreground);
+	--maplibregl-legend-switch-thumb-color: var(--background);
 	--maplibregl-legend-focus-color: var(--ring);
 	--maplibregl-legend-text-color: var(--foreground);
+	--maplibregl-legend-icon-color: var(--foreground);
+	--maplibregl-legend-close-icon-color: var(--foreground);
+	--maplibregl-legend-icon-hidden-color: var(--muted-foreground);
+	--maplibregl-legend-icon-partial-color: var(--muted-foreground);
+	--maplibregl-legend-missing-icon-color: var(--muted-foreground);
+	--maplibregl-legend-style-icon-color: var(--muted-foreground);
+	--maplibregl-legend-divider: 1px solid var(--border);
+	--maplibregl-legend-tree-guide-color: var(--border);
+}
+
+/* The controls of MapLibre on the map follow the dark theme (the map style itself does not). */
+.dark .maplibregl-ctrl-group,
+.dark .maplibregl-ctrl-attrib.maplibregl-compact,
+.dark .maplibregl-popup-content {
+	background-color: var(--popover);
+	color: var(--popover-foreground);
+}
+.dark .maplibregl-ctrl-group:not(:empty) {
+	box-shadow: 0 0 0 1px var(--border);
+}
+.dark .maplibregl-ctrl-group button + button {
+	border-top-color: var(--border);
+}
+.dark .maplibregl-ctrl-group button:not(:disabled):hover {
+	background-color: var(--accent);
+}
+.dark .maplibregl-ctrl button .maplibregl-ctrl-icon,
+.dark .maplibregl-ctrl-attrib-button {
+	filter: invert(1);
+}
+.dark .maplibregl-ctrl.maplibregl-ctrl-attrib:not(.maplibregl-compact) {
+	background-color: color-mix(in oklab, var(--background) 60%, transparent);
+}
+.dark .maplibregl-ctrl-attrib a {
+	color: color-mix(in oklab, var(--foreground) 75%, transparent);
+}
+.dark .maplibregl-ctrl-scale {
+	background-color: color-mix(in oklab, var(--background) 75%, transparent);
+	border-color: var(--foreground);
+	color: var(--foreground);
+}
+.dark .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+.dark .maplibregl-popup-anchor-top-left .maplibregl-popup-tip,
+.dark .maplibregl-popup-anchor-top-right .maplibregl-popup-tip {
+	border-bottom-color: var(--popover);
+}
+.dark .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+.dark .maplibregl-popup-anchor-bottom-left .maplibregl-popup-tip,
+.dark .maplibregl-popup-anchor-bottom-right .maplibregl-popup-tip {
+	border-top-color: var(--popover);
+}
+.dark .maplibregl-popup-anchor-left .maplibregl-popup-tip {
+	border-right-color: var(--popover);
+}
+.dark .maplibregl-popup-anchor-right .maplibregl-popup-tip {
+	border-left-color: var(--popover);
 }
 
 .gl-style-editor-dialog {
