@@ -189,91 +189,94 @@
 </script>
 
 <div class="flex h-full min-h-0 flex-col bg-background">
-	<div class="flex flex-wrap items-center gap-2 border-b p-2">
-		<ToggleGroup.Root
-			type="single"
-			variant="outline"
-			size="sm"
-			value={scope}
-			onValueChange={selectScope}
-		>
-			<ToggleGroup.Item value="files" aria-label="Split files" class="text-xs">
-				<FilesIcon class="size-3.5" /> <span class="hidden sm:inline">Split files</span>
-			</ToggleGroup.Item>
-			<ToggleGroup.Item value="style" aria-label="Whole style" class="text-xs">
-				<BracesIcon class="size-3.5" /> <span class="hidden sm:inline">Whole style</span>
-			</ToggleGroup.Item>
-		</ToggleGroup.Root>
-		<ToggleGroup.Root
-			type="single"
-			variant="outline"
-			size="sm"
-			value={format}
-			onValueChange={selectFormat}
-		>
-			<ToggleGroup.Item value="yaml" class="text-xs">YAML</ToggleGroup.Item>
-			<ToggleGroup.Item value="json" class="text-xs">JSON</ToggleGroup.Item>
-		</ToggleGroup.Root>
+	<div class="flex items-start gap-2 border-b p-2">
+		<div class="flex min-w-0 flex-1 flex-wrap items-center gap-2">
+			<ToggleGroup.Root
+				type="single"
+				variant="outline"
+				size="sm"
+				value={scope}
+				onValueChange={selectScope}
+			>
+				<ToggleGroup.Item value="files" aria-label="Split files" class="text-xs">
+					<FilesIcon class="size-3.5" /> <span class="hidden sm:inline">Split files</span>
+				</ToggleGroup.Item>
+				<ToggleGroup.Item value="style" aria-label="Whole style" class="text-xs">
+					<BracesIcon class="size-3.5" /> <span class="hidden sm:inline">Whole style</span>
+				</ToggleGroup.Item>
+			</ToggleGroup.Root>
+			<ToggleGroup.Root
+				type="single"
+				variant="outline"
+				size="sm"
+				value={format}
+				onValueChange={selectFormat}
+			>
+				<ToggleGroup.Item value="yaml" class="text-xs">YAML</ToggleGroup.Item>
+				<ToggleGroup.Item value="json" class="text-xs">JSON</ToggleGroup.Item>
+			</ToggleGroup.Root>
 
-		<div class="ml-auto flex items-center gap-2">
-			<div class="flex items-center gap-1.5">
-				<Switch id="auto-apply" size="sm" bind:checked={autoApply} />
-				<Label for="auto-apply" class="text-xs font-normal">Auto apply</Label>
+			<div class="ml-auto flex items-center gap-2">
+				<div class="flex items-center gap-1.5">
+					<Switch id="auto-apply" size="sm" bind:checked={autoApply} />
+					<Label for="auto-apply" class="text-xs font-normal">Auto apply</Label>
+				</div>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<Button {...props} variant="ghost" size="icon-sm" onclick={copy} aria-label="Copy">
+								<CopyIcon />
+							</Button>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>Copy this file</Tooltip.Content>
+				</Tooltip.Root>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<Button
+								{...props}
+								variant="ghost"
+								size="icon-sm"
+								disabled={!dirty}
+								onclick={discard}
+								aria-label="Discard the edits"
+							>
+								<RotateCcwIcon />
+							</Button>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>Discard the edits</Tooltip.Content>
+				</Tooltip.Root>
+				<Tooltip.Root>
+					<Tooltip.Trigger>
+						{#snippet child({ props })}
+							<Button {...props} size="sm" disabled={!dirty} onclick={() => apply()}>
+								<PlayIcon /> Apply
+							</Button>
+						{/snippet}
+					</Tooltip.Trigger>
+					<Tooltip.Content>Apply to the map (⌘S / Ctrl+S)</Tooltip.Content>
+				</Tooltip.Root>
 			</div>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<Button {...props} variant="ghost" size="icon-sm" onclick={copy} aria-label="Copy">
-							<CopyIcon />
-						</Button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content>Copy this file</Tooltip.Content>
-			</Tooltip.Root>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<Button
-							{...props}
-							variant="ghost"
-							size="icon-sm"
-							disabled={!dirty}
-							onclick={discard}
-							aria-label="Discard the edits"
-						>
-							<RotateCcwIcon />
-						</Button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content>Discard the edits</Tooltip.Content>
-			</Tooltip.Root>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<Button {...props} size="sm" disabled={!dirty} onclick={() => apply()}>
-							<PlayIcon /> Apply
-						</Button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content>Apply to the map (⌘S / Ctrl+S)</Tooltip.Content>
-			</Tooltip.Root>
-			<Tooltip.Root>
-				<Tooltip.Trigger>
-					{#snippet child({ props })}
-						<Button
-							{...props}
-							variant="ghost"
-							size="icon-sm"
-							onclick={onclose}
-							aria-label="Hide the editor"
-						>
-							{#if side === 'bottom'}<PanelBottomCloseIcon />{:else}<PanelRightCloseIcon />{/if}
-						</Button>
-					{/snippet}
-				</Tooltip.Trigger>
-				<Tooltip.Content>Hide the editor</Tooltip.Content>
-			</Tooltip.Root>
 		</div>
+		<!-- At the top right of the panel, whichever way the controls wrap. -->
+		<Tooltip.Root>
+			<Tooltip.Trigger>
+				{#snippet child({ props })}
+					<Button
+						{...props}
+						variant="ghost"
+						size="icon-sm"
+						onclick={onclose}
+						aria-label="Hide the editor"
+					>
+						{#if side === 'bottom'}<PanelBottomCloseIcon />{:else}<PanelRightCloseIcon />{/if}
+					</Button>
+				{/snippet}
+			</Tooltip.Trigger>
+			<Tooltip.Content>Hide the editor</Tooltip.Content>
+		</Tooltip.Root>
 	</div>
 
 	{#if outdated}

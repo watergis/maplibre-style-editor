@@ -58,7 +58,7 @@
 			hash: true,
 			attributionControl: { compact: true }
 		});
-		m.addControl(new NavigationControl(), 'top-right');
+		m.addControl(new NavigationControl(), 'bottom-right');
 		m.addControl(new ScaleControl(), 'bottom-left');
 
 		// A new style (not a difference applied to the current one): the legend starts over with it.
