@@ -2,7 +2,7 @@
 
 A web app to load a [MapLibre](https://maplibre.org/) style, edit it on the map or as JSON / YAML, and export it.
 
-- **Load** a style from a URL, a file (JSON, YAML, or a zip of split YAML files) dropped on the map or opened, or one of the sample styles listed under the URL box: CARTO (Voyager, Positron, Dark Matter) and the [MapLibre demo styles](https://github.com/maplibre/demotiles).
+- **Load** a style from a URL, a file (JSON, YAML, or a zip of split YAML files) dropped on the map or opened, or one of the sample styles listed under the URL box: CARTO (Voyager, Positron, Dark Matter) and [MapLibre World](https://github.com/maplibre/demotiles).
 - **Edit on the map** with the style editor of [maplibre-gl-legend](https://github.com/watergis/maplibre-gl-legend): the palette button of a layer in the legend opens it. Layers are grouped by their source layer.
 - **Edit as text** in the panel on the right of the map, which follows the map in real time:
   - **Split files**: `style.yml` (the root of the style) and one file per layer (`layers/<id>.yml`)
