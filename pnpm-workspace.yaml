@@ -4,4 +4,4 @@ allowBuilds:
   core-js: false
 engineStrict: true
 minimumReleaseAgeExclude:
-  - '@watergis/maplibre-gl-legend@4.2.0'
+  - '@watergis/maplibre-gl-legend@4.2.0 || 4.2.1'

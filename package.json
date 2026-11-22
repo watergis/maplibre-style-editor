@@ -70,7 +70,7 @@
 		"@maplibre/maplibre-gl-inspect": "^1.9.0",
 		"@maplibre/maplibre-gl-style-spec": "^26.9.0",
 		"@watergis/maplibre-gl-export": "^6.0.0",
-		"@watergis/maplibre-gl-legend": "^4.2.0",
+		"@watergis/maplibre-gl-legend": "^4.2.1",
 		"codemirror": "^6.0.2",
 		"fflate": "^0.8.3",
 		"jsonc-parser": "^3.3.1",
