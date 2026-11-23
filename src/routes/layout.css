@@ -152,6 +152,32 @@
 	fill: var(--maplibregl-legend-text-color);
 }
 
+/* The legend is hidden while the inspector shows its own style. */
+.inspecting .maplibregl-ctrl-group:has(> .maplibregl-legend-switcher) {
+	display: none;
+}
+
+/* The current zoom level, above the zoom buttons of the navigation control: the size of the
+   buttons of a MapLibre control group, and the same separator. */
+.maplibregl-ctrl-zoom-level {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 29px;
+	height: 29px;
+	font-family: var(--font-mono, ui-monospace, monospace);
+	font-size: 11px;
+	font-variant-numeric: tabular-nums;
+	user-select: none;
+}
+.maplibregl-ctrl-group .maplibregl-ctrl-zoom-level + button {
+	border-top: 1px solid #ddd;
+}
+.dark .maplibregl-ctrl-group .maplibregl-ctrl-zoom-level + button {
+	border-top-color: var(--border);
+}
+
 /* The controls of MapLibre on the map follow the dark theme (the map style itself does not). */
 .dark .maplibregl-ctrl-group,
 .dark .maplibregl-ctrl-attrib.maplibregl-compact,

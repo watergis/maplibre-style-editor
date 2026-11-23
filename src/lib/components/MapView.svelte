@@ -4,7 +4,6 @@
 		GeolocateControl,
 		GlobeControl,
 		Map as MaplibreMap,
-		NavigationControl,
 		Popup,
 		ScaleControl,
 		addProtocol,
@@ -23,7 +22,7 @@
 	import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 	import { styleStore } from '#lib/state/style-store.svelte.js';
 	import { OpenPanelControl } from '#lib/map/open-panel-control.js';
-	import { ZoomLevelControl } from '#lib/map/zoom-level-control.js';
+	import { ZoomNavigationControl } from '#lib/map/zoom-navigation-control.js';
 	import { DebugControl } from '#lib/map/debug-control.js';
 
 	interface Props {
@@ -97,7 +96,7 @@
 		});
 
 		m.addControl(
-			new NavigationControl({
+			new ZoomNavigationControl({
 				showZoom: true,
 				showCompass: true,
 				visualizePitch: true,
@@ -116,9 +115,8 @@
 		);
 		m.addControl(new GlobeControl(), 'bottom-right');
 		m.addControl(new MaplibreExportControl({}), 'bottom-right');
-		// Bottom-left, from the bottom up: scale, zoom level, debug options, inspector.
+		// Bottom-left, from the bottom up: scale, debug options, inspector.
 		m.addControl(new ScaleControl(), 'bottom-left');
-		m.addControl(new ZoomLevelControl(), 'bottom-left');
 		m.addControl(new DebugControl(), 'bottom-left');
 		inspect = new MaplibreInspect({
 			showInspectButton: true,
@@ -127,6 +125,8 @@
 			popup: new Popup({ closeButton: false, closeOnClick: false }),
 			toggleCallback: (show) => {
 				inspecting = show;
+				// The legend is of no use for the inspect style: hidden while inspecting (see layout.css).
+				m.getContainer().classList.toggle('inspecting', show);
 				// Called before the inspect style is made.
 				if (show) addInspectSources(styleStore.style);
 			}
