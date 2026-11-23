@@ -12,7 +12,8 @@ const download = (data: BlobPart, fileName: string, type: string) => {
 	setTimeout(() => URL.revokeObjectURL(url), 0);
 };
 
-const fileBase = () => styleStore.name.replace(/[^\w.-]+/g, '_') || 'style';
+/** The name of the style as a file name, e.g. `Voyager (Protomaps)` → `Voyager_Protomaps`. */
+const fileBase = () => styleStore.name.replace(/[^\w.-]+/g, '_').replace(/^_+|_+$/g, '') || 'style';
 
 export function downloadJson(minify = false) {
 	if (!styleStore.style) return;
