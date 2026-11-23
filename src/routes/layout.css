@@ -152,6 +152,31 @@
 	fill: var(--maplibregl-legend-text-color);
 }
 
+/* The export dialog and its toolbar use the colors, radius and font of the app (their roles are
+   named as in shadcn/ui). `:root` makes the rules win over the theme of the plugin. */
+:root .gl-export-dialog,
+:root .gl-export-adjust-bar {
+	--gl-export-background: var(--popover);
+	--gl-export-foreground: var(--popover-foreground);
+	--gl-export-primary: var(--primary);
+	--gl-export-primary-foreground: var(--primary-foreground);
+	--gl-export-secondary: var(--secondary);
+	--gl-export-secondary-foreground: var(--secondary-foreground);
+	--gl-export-muted: var(--muted);
+	--gl-export-muted-foreground: var(--muted-foreground);
+	--gl-export-accent: var(--accent);
+	--gl-export-accent-foreground: var(--accent-foreground);
+	--gl-export-destructive: var(--destructive);
+	--gl-export-border: var(--border);
+	--gl-export-input: var(--input);
+	--gl-export-ring: var(--ring);
+	--gl-export-input-background: var(--background);
+	--gl-export-preview-background: var(--muted);
+	--gl-export-font: var(--font-sans);
+	--gl-export-radius: var(--radius);
+	--gl-export-radius-sm: calc(var(--radius) * 0.6);
+}
+
 /* The legend is hidden while the inspector shows its own style. */
 .inspecting .maplibregl-ctrl-group:has(> .maplibregl-legend-switcher) {
 	display: none;
